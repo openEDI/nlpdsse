@@ -1,0 +1,23 @@
+{
+   "properties": {
+      "powers_real": {
+         "title": "Powers Real",
+         "type": "string"
+      },
+      "powers_imaginary": {
+         "title": "Powers Imaginary",
+         "type": "string"
+      },
+      "topology": {
+         "title": "Topology",
+         "type": "string"
+      }
+   },
+   "required": [
+      "powers_real",
+      "powers_imaginary",
+      "topology"
+   ],
+   "title": "InputMapping",
+   "type": "object"
+}

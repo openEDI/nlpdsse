@@ -1,0 +1,228 @@
+{
+   "$defs": {
+      "BranchFlow": {
+         "description": "Represents a user profile with data validation.",
+         "properties": {
+            "y": {
+               "$ref": "#/$defs/YBus"
+            },
+            "nodeInd": {
+               "items": {
+                  "type": "integer"
+               },
+               "title": "Nodeind",
+               "type": "array"
+            },
+            "nodeOrder": {
+               "items": {
+                  "type": "string"
+               },
+               "title": "Nodeorder",
+               "type": "array"
+            }
+         },
+         "required": [
+            "y",
+            "nodeInd",
+            "nodeOrder"
+         ],
+         "title": "BranchFlow",
+         "type": "object"
+      },
+      "MeasurementData": {
+         "properties": {
+            "pinj": {
+               "items": {
+                  "type": "number"
+               },
+               "title": "Pinj",
+               "type": "array"
+            },
+            "qinj": {
+               "items": {
+                  "type": "number"
+               },
+               "title": "Qinj",
+               "type": "array"
+            },
+            "sinj_nodeOrder": {
+               "items": {
+                  "type": "string"
+               },
+               "title": "Sinj Nodeorder",
+               "type": "array"
+            },
+            "sflow_real": {
+               "anyOf": [
+                  {
+                     "items": {
+                        "type": "number"
+                     },
+                     "type": "array"
+                  },
+                  {
+                     "type": "null"
+                  }
+               ],
+               "default": null,
+               "title": "Sflow Real"
+            },
+            "sflow_imag": {
+               "anyOf": [
+                  {
+                     "items": {
+                        "type": "number"
+                     },
+                     "type": "array"
+                  },
+                  {
+                     "type": "null"
+                  }
+               ],
+               "default": null,
+               "title": "Sflow Imag"
+            },
+            "sflow_nodeOrder": {
+               "anyOf": [
+                  {
+                     "items": {
+                        "type": "string"
+                     },
+                     "type": "array"
+                  },
+                  {
+                     "type": "null"
+                  }
+               ],
+               "default": null,
+               "title": "Sflow Nodeorder"
+            }
+         },
+         "required": [
+            "pinj",
+            "qinj",
+            "sinj_nodeOrder"
+         ],
+         "title": "MeasurementData",
+         "type": "object"
+      },
+      "NodeOrder": {
+         "properties": {
+            "names": {
+               "items": {
+                  "type": "string"
+               },
+               "title": "Names",
+               "type": "array"
+            },
+            "name2ind": {
+               "additionalProperties": {
+                  "type": "integer"
+               },
+               "title": "Name2Ind",
+               "type": "object"
+            },
+            "ind2name": {
+               "additionalProperties": {
+                  "type": "string"
+               },
+               "title": "Ind2Name",
+               "type": "object"
+            }
+         },
+         "required": [
+            "names",
+            "name2ind",
+            "ind2name"
+         ],
+         "title": "NodeOrder",
+         "type": "object"
+      },
+      "YBus": {
+         "description": "Represents a user profile with data validation.",
+         "properties": {
+            "r": {
+               "items": {
+                  "type": "integer"
+               },
+               "title": "R",
+               "type": "array"
+            },
+            "c": {
+               "items": {
+                  "type": "integer"
+               },
+               "title": "C",
+               "type": "array"
+            },
+            "vr": {
+               "items": {
+                  "type": "number"
+               },
+               "title": "Vr",
+               "type": "array"
+            },
+            "vi": {
+               "items": {
+                  "type": "number"
+               },
+               "title": "Vi",
+               "type": "array"
+            }
+         },
+         "required": [
+            "r",
+            "c",
+            "vr",
+            "vi"
+         ],
+         "title": "YBus",
+         "type": "object"
+      }
+   },
+   "properties": {
+      "x0": {
+         "items": {
+            "type": "number"
+         },
+         "title": "X0",
+         "type": "array"
+      },
+      "ybus": {
+         "$ref": "#/$defs/YBus"
+      },
+      "nodeOrder": {
+         "$ref": "#/$defs/NodeOrder"
+      },
+      "measurement": {
+         "$ref": "#/$defs/MeasurementData"
+      },
+      "branch_flow": {
+         "anyOf": [
+            {
+               "$ref": "#/$defs/BranchFlow"
+            },
+            {
+               "type": "null"
+            }
+         ],
+         "default": null
+      },
+      "vm0": {
+         "items": {
+            "type": "number"
+         },
+         "title": "Vm0",
+         "type": "array"
+      }
+   },
+   "required": [
+      "x0",
+      "ybus",
+      "nodeOrder",
+      "measurement",
+      "vm0"
+   ],
+   "title": "DSSEDataModel",
+   "type": "object"
+}
