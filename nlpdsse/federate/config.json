@@ -1,6 +1,6 @@
 {
    "federate_config": {
-      "name":"generic_federate",
+      "name":"nlpdsse",
       "coreType": "zmq",
       "only_transmit_on_change": true,
       "period": 1,

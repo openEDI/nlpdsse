@@ -23,8 +23,17 @@ class NLPDSSEFederate:
 		self.config=config
 		self.staticInputs=staticInputs
 		self.inputMapping=inputMapping
+		self.config['federate_config']['name']=federate_name
 		self.config['federate_config']['subscriptions']=[]
 		self.config['federate_config']['publications']=[]
+		self.config['simulation_config'].update(staticInputs)
+
+		if 'broker_address' in staticInputs:
+			self.config['federate_config']['broker_address']=staticInputs['broker_address']
+		if 'port' in staticInputs:
+			self.config['federate_config']['port']=staticInputs['port']
+
+
 		for entry in inputMapping:
 			self.config['federate_config']['subscriptions'].append(\
 				{'global':True,'type':'string','key':inputMapping[entry]})
@@ -49,7 +58,7 @@ class NLPDSSEFederate:
 
 		self.dt=dt
 		logger.info('completed init')
-		logger.debug(f'config::::{self.config}')
+		logger.info(f'federate_config::::{self.config["federate_config"]}')
 
 
 #=======================================================================================================================
@@ -77,7 +86,7 @@ class NLPDSSEFederate:
 		while grantedTime<simEndTime:
 			# get subscriptions
 			subs=self.get_sub(checkForUpdate=True,returnAsDict=True)
-			logger.info('Received subscription')
+			logger.info(f'Received subscription')
 
 			data=self.alg(subs)
 			if data:
@@ -85,7 +94,7 @@ class NLPDSSEFederate:
 				assert not missingPubKeys, f'missing the following pub keys:{missingPubKeys}'
 
 				# set publications
-				self.set_pub(data)
+				self.set_pub(data,timestamp=subs[self.inputMapping['powers_real']]['time'])
 				logger.info(f'Sent Publication::::{data.keys()}')
 
 			grantedTime = h.helicsFederateRequestTime(self.federate,grantedTime+1)
@@ -120,10 +129,11 @@ class NLPDSSEFederate:
 
 
 #=======================================================================================================================
-	def set_pub(self,data:dict):
+	def set_pub(self,data:dict,timestamp:str):
 		for entry in self.pub:
 			typeFunc=self.mapping['pubFunc'][entry]
 			if data[entry]:
+				data[entry]['time']=timestamp
 				self.pub[entry].publish(typeFunc(**data[entry]).model_dump_json())
 
 

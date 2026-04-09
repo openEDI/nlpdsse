@@ -137,6 +137,8 @@ class NLPDSSE:
 
 		xsol=res['sol']['x'].toarray().flatten()
 		v=xsol[ind['vars']['vr']]+1j*xsol[ind['vars']['vi']]
+		v=np.hstack((np.array(p0[0:3])+1j*np.array(p0[3::]),v))
+		assert v.shape[0]==len(nodeNames)
 		res={'vm':np.abs(v),'va':np.angle(v),'ids':nodeNames}
 		res['success']=solver.stats()['success']
 

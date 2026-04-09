@@ -4,9 +4,6 @@ from pydantic import BaseModel
 
 
 class YBus(BaseModel):
-	"""
-	Represents a user profile with data validation.
-	"""
 	r: List[int]
 	c: List[int]
 	vr: List[float]
@@ -14,9 +11,6 @@ class YBus(BaseModel):
 
 
 class BranchFlow(BaseModel):
-	"""
-	Represents a user profile with data validation.
-	"""
 	y: YBus
 	nodeInd: List[int]
 	nodeOrder: List[str]

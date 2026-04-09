@@ -32,10 +32,13 @@ def run():
 
 	# update based on payload
 	json.dump(inputMapping,open(os.path.join(dirPath,'input_mapping.json'),'w'))
+	json.dump(staticInputs,open(os.path.join(dirPath,'static_inputs.json'),'w'))
 
 	runPath=os.path.join(dirPath,'fed.py')
 	directive=f'python3 {runPath}'
-	proc=subprocess.Popen(shlex.split(directive),stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL)
+	outfile=open(os.path.join(dirPath,'out.txt'),'w')
+	errfile=open(os.path.join(dirPath,'error.txt'),'w')
+	proc=subprocess.Popen(shlex.split(directive),stdout=outfile,stderr=errfile)
 	procMap[runUUID]=proc.pid
 
 	res=Response(status=HTTPStatus.OK)
@@ -65,6 +68,31 @@ def status():
 
 
 #=======================================================================================================================
+def logs():
+	runUUID = request.args.get('uuid')
+	dirpath=f'/tmp/{runUUID}'
+	outfile=os.path.join(dirpath,'out.txt')
+	errfile=os.path.join(dirpath,'error.txt')
+	staticInputsFile=os.path.join(dirpath,'static_inputs.json')
+	inputMappingFile=os.path.join(dirpath,'input_mapping.json')
+	if os.path.exists(outfile) and os.path.exists(errfile) and \
+		os.path.exists(staticInputsFile) and os.path.exists(inputMappingFile):
+		data={}
+		f=open(outfile); data['outfile']=f.read(); f.close()
+		f=open(errfile); data['errfile']=f.read(); f.close()
+		f=open(staticInputsFile); data['static_inputs']=f.read(); f.close()
+		f=open(inputMappingFile); data['input_mapping']=f.read(); f.close()
+		res=Response(status=HTTPStatus.OK)
+		res.mimetype='application/json'
+		res.response=json.dumps({"success":True,"info":data})
+	else:
+		res=Response(status=HTTPStatus.BAD_REQUEST)
+		res.mimetype='application/json'
+		res.response=json.dumps({"success":False,"error":f"UUID {runUUID} does not exist on file system"})
+	return res
+
+
+#=======================================================================================================================
 def results():
 	runUUID = request.args.get('uuid')
 	if runUUID in procMap:
@@ -84,6 +112,7 @@ if __name__ == '__main__':
 	app.add_url_rule(rule='/run',methods=['POST'],view_func=run)
 	app.add_url_rule(rule='/status',methods=['GET'],view_func=status)
 	app.add_url_rule(rule='/results',methods=['GET'],view_func=results)
+	app.add_url_rule(rule='/logs',methods=['GET'],view_func=logs)
 	app.run(host='0.0.0.0',port=5000,debug=False,use_reloader=True,threaded=True)
 
 

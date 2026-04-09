@@ -32,10 +32,9 @@ def test_nlpdsse(init):
 	res=requests.get(url=url+'/status',params={'uuid':data['uuid']})
 	assert res.status_code==200
 
-	res=requests.get(url=url+'/results',params={'uuid':data['uuid']})
+	res=requests.get(url=url+'/logs',params={'uuid':data['uuid']})
 	assert res.status_code==200
 
-
-
-
+	res=requests.get(url=url+'/results',params={'uuid':data['uuid']})
+	assert res.status_code==200
 
