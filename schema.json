@@ -1,0 +1,33 @@
+{
+   "properties": {
+      "start_date": {
+         "anyOf": [
+            {
+               "type": "string"
+            },
+            {
+               "type": "null"
+            }
+         ],
+         "default": null,
+         "title": "Start Date"
+      },
+      "run_freq_sec": {
+         "default": 900,
+         "title": "Run Freq Sec",
+         "type": "integer"
+      },
+      "start_time_index": {
+         "default": 0,
+         "title": "Start Time Index",
+         "type": "integer"
+      },
+      "number_of_timesteps": {
+         "default": 8,
+         "title": "Number Of Timesteps",
+         "type": "integer"
+      }
+   },
+   "title": "StaticInputs",
+   "type": "object"
+}
