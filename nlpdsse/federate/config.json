@@ -14,7 +14,7 @@
    "simulation_config": {
       "cosim_uuid":"cb4573af4f6648e6be4a40b2b90f10d0",
       "start_time": 0,
-      "end_time": 8,
+      "number_of_timesteps": 8,
       "step_time": 1
    }
 }

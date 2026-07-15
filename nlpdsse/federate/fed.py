@@ -17,12 +17,13 @@ logger=logging.getLogger(__name__)
 
 class NLPDSSEFederate:
 
-	def __init__(self,config,inputMapping,componentDefinition,staticInputs,federate_name='nlpdsse',dt=1):
+	def __init__(self,config,inputMapping,componentDefinition,staticInputs,dt=1):
 		self.dsse=NLPDSSE()
 		self.dsseInputData={}
 		self.config=config
 		self.staticInputs=staticInputs
 		self.inputMapping=inputMapping
+		federate_name=staticInputs['name'] if 'name' in staticInputs else 'nlpdsse'
 		self.config['federate_config']['name']=federate_name
 		self.config['federate_config']['subscriptions']=[]
 		self.config['federate_config']['publications']=[]
@@ -76,14 +77,14 @@ class NLPDSSEFederate:
 #=======================================================================================================================
 	def simulate(self,simEndTime=None):
 		if not simEndTime:
-			simEndTime=self.config['simulation_config']['end_time']
+			simEndTime=self.config['simulation_config']['number_of_timesteps']
 		self.federate.enter_executing_mode()
 		logger.info('entered execution mode')
 
 		grantedTime=0
 		grantedTime = h.helicsFederateRequestTime(self.federate,grantedTime)
 
-		while grantedTime<simEndTime:
+		while grantedTime<=simEndTime:
 			# get subscriptions
 			subs=self.get_sub(checkForUpdate=True,returnAsDict=True)
 			logger.info(f'Received subscription')
@@ -97,7 +98,7 @@ class NLPDSSEFederate:
 				self.set_pub(data,timestamp=subs[self.inputMapping['powers_real']]['time'])
 				logger.info(f'Sent Publication::::{data.keys()}')
 
-			grantedTime = h.helicsFederateRequestTime(self.federate,grantedTime+1)
+			grantedTime = h.helicsFederateRequestTime(self.federate,grantedTime+self.dt)
 			logger.info(f'grantedTime::::{grantedTime}')
 
 		logger.info('completed simulation')
